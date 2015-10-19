@@ -6,12 +6,11 @@ import (
 	"time"
 
 	"github.com/cyx/greene"
-	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
-	mux := httprouter.New()
-	mux.GET("/", Home)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", Home)
 
 	server := &http.Server{
 		Addr:      ":8000",
@@ -21,7 +20,7 @@ func main() {
 	server.ListenAndServe()
 }
 
-func Home(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func Home(w http.ResponseWriter, r *http.Request) {
 	if _, ok := w.(http.Flusher); !ok {
 		http.Error(w, "streaming unsupported", http.StatusInternalServerError)
 		return
