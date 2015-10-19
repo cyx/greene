@@ -23,6 +23,28 @@ server := &http.Server{
 server.ListenAndServe()
 ```
 
+## graceful
+
+Part of the motivation in writing `greene` was to
+ephemeralize the lifecycle management of servers --
+which obviously includes graceful shutdown.
+
+It should just play nice with [graceful][2]:
+
+```go
+server := &graceful.Server{
+	Server: &http.Server{
+		Addr: ":8000",
+		Handler: mux,
+	},
+	Timeout: time.Second * 10,
+	ConnState: greene.New(time.Second * 300),
+}
+server.ListenAndServe()
+```
+
+[2]: https://github.com/tylerb/graceful
+
 ## license
 
 MIT
