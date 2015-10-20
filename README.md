@@ -18,7 +18,7 @@ EC2 instances.
 // Recycle connections after 5 minutes.
 server := &http.Server{
 	Addr:      ":8000",
-	ConnState: greene.New(time.Second * 300),
+	ConnState: greene.New(time.Minute * 10),
 }
 server.ListenAndServe()
 ```
@@ -38,7 +38,7 @@ server := &graceful.Server{
 		Handler: mux,
 	},
 	Timeout: time.Second * 10,
-	ConnState: greene.New(time.Second * 300),
+	ConnState: greene.New(time.Minute * 10),
 }
 server.ListenAndServe()
 ```
