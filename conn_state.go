@@ -27,7 +27,6 @@ func New(duration time.Duration) func(net.Conn, http.ConnState) {
 		mutex.Lock()
 		defer mutex.Unlock()
 		delete(mapping, conn)
-		conn.Close()
 	}
 
 	return func(conn net.Conn, state http.ConnState) {
@@ -44,8 +43,10 @@ func New(duration time.Duration) func(net.Conn, http.ConnState) {
 			if t, ok := mapping[conn]; ok {
 				if time.Now().Sub(t) >= duration {
 					del(conn)
+					conn.Close()
 				}
 			}
+
 		case http.StateClosed, http.StateHijacked:
 			// Save memory and discard disconnected clients
 			del(conn)
